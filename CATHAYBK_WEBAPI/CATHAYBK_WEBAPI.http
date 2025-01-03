@@ -1,0 +1,6 @@
+@CATHAYBK_WEBAPI_HostAddress = http://localhost:5128
+
+GET {{CATHAYBK_WEBAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

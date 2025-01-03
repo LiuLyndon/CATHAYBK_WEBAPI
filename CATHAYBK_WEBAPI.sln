@@ -1,0 +1,40 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.12.35527.113 d17.12
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CATHAYBK_WEBAPI", "CATHAYBK_WEBAPI\CATHAYBK_WEBAPI.csproj", "{0C4E0AD2-06B3-4EFB-AC86-49B9EC72CFF9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BasicEIP_Core", "BasicEIP_Core\BasicEIP_Core.csproj", "{2F12FD3F-4C43-4843-A2B6-83778094324C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CATHAYBK_Model", "CATHAYBK_Model\CATHAYBK_Model.csproj", "{6AD3FC08-2ACD-4D0E-B9BD-4952222C86B8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CATHAYBK_Service", "CATHAYBK_Service\CATHAYBK_Service.csproj", "{61C9860B-88B9-4124-924E-E89DE12BD878}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0C4E0AD2-06B3-4EFB-AC86-49B9EC72CFF9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0C4E0AD2-06B3-4EFB-AC86-49B9EC72CFF9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0C4E0AD2-06B3-4EFB-AC86-49B9EC72CFF9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0C4E0AD2-06B3-4EFB-AC86-49B9EC72CFF9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2F12FD3F-4C43-4843-A2B6-83778094324C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2F12FD3F-4C43-4843-A2B6-83778094324C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2F12FD3F-4C43-4843-A2B6-83778094324C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2F12FD3F-4C43-4843-A2B6-83778094324C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6AD3FC08-2ACD-4D0E-B9BD-4952222C86B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6AD3FC08-2ACD-4D0E-B9BD-4952222C86B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6AD3FC08-2ACD-4D0E-B9BD-4952222C86B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6AD3FC08-2ACD-4D0E-B9BD-4952222C86B8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{61C9860B-88B9-4124-924E-E89DE12BD878}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{61C9860B-88B9-4124-924E-E89DE12BD878}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{61C9860B-88B9-4124-924E-E89DE12BD878}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{61C9860B-88B9-4124-924E-E89DE12BD878}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
