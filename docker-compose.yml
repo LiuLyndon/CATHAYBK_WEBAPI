@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  cathaybk_webapi:
+    image: ${DOCKER_REGISTRY-}cathaybkwebapi
+    build:
+      context: .
+      dockerfile: CATHAYBK_WEBAPI/Dockerfile
