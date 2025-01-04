@@ -41,8 +41,13 @@ namespace CATHAYBK_WEBAPI.Controllers
 
         [HttpPost]
         [CreatedResponseType(typeof(ApiResponse<int>))]
-        public async Task<IActionResult> Create([FromBody] CreateBitcoinRequest request)
+        public async Task<IActionResult> Create(CreateBitcoinRequest request)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState); // 回傳 400 錯誤，並顯示驗證訊息
+            }
+
             // 將 request 映射到資料庫實體
             tblBitcoin bitcoin = new tblBitcoin
             {
@@ -59,7 +64,7 @@ namespace CATHAYBK_WEBAPI.Controllers
 
         [HttpPut("{id}")]
 
-        public async Task<IActionResult> Update(int id, [FromBody] tblBitcoin bitcoin)
+        public async Task<IActionResult> Update(int id, tblBitcoin bitcoin)
         {
             if (id != bitcoin.Id)
             {

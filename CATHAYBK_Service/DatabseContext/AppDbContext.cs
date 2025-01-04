@@ -1,13 +1,32 @@
 using CATHAYBK_Model.Database;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace CATHAYBK_Service.DatabseContext
 {
     public class AppDbContext : DbContext
     {
-        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
+        private readonly ILoggerFactory _loggerFactory;
+
+        public AppDbContext(
+            DbContextOptions<AppDbContext> options,
+            ILoggerFactory loggerFactory) : base(options)
+        {
+            _loggerFactory = loggerFactory;
+        }
 
         public DbSet<tblBitcoin> Bitcoins { get; set; }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+                optionsBuilder
+                    .UseLoggerFactory(_loggerFactory) // 設定 LoggerFactory
+                    .EnableSensitiveDataLogging() // 記錄參數值
+                    .EnableDetailedErrors(); // 顯示詳細錯誤
+            }
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

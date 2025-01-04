@@ -13,6 +13,8 @@ using CATHAYBK_Service.Service;
 using CATHAYBK_Service.Base;
 using CATHAYBK_Service.DatabseContext;
 using Microsoft.EntityFrameworkCore;
+using BasicEIP_Core.NLog;
+using Microsoft.Extensions.Logging;
 
 var logger = NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
 
@@ -22,16 +24,17 @@ try
 
     var builder = WebApplication.CreateBuilder(args);
 
-    // 設定 NLog 為 .NET Core 的日誌記錄提供者
-    builder.Logging.ClearProviders(); // 清除預設的日誌記錄提供者
-    builder.Logging.SetMinimumLevel(Microsoft.Extensions.Logging.LogLevel.Trace); // 設定最低記錄等級為 Trace
-    builder.Logging.AddNLog(); // 加入 NLog 作為日誌記錄提供者
-
     // 配置應用程式設定（如連線字串、系統設定等）
     ConfigureAppSettings(builder);
 
     // 配置應用程式的依賴注入服務 (DI)
     ConfigureServices(builder);
+
+    // 設定 NLog 為 .NET Core 的日誌記錄提供者
+    builder.Logging.ClearProviders(); // 清除預設的日誌記錄提供者
+    builder.Logging.SetMinimumLevel(Microsoft.Extensions.Logging.LogLevel.Trace); // 設定最低記錄等級為 Trace
+    builder.Logging.AddNLog(); // 加入 NLog 作為日誌記錄提供者
+    builder.Host.UseNLog();
 
     // 建立應用程式物件
     // ---------------------------------------------------------
@@ -70,8 +73,19 @@ void ConfigureAppSettings(WebApplicationBuilder builder)
     // 設定 ConnectionStrings 與 SystemSetting 至 IOptions
     //builder.Services.Configure<ConnectionStrings>(builder.Configuration.GetSection("ConnectionStrings"));
 
+    var loggerFactory = LoggerFactory.Create(logging =>
+    {
+        logging.ClearProviders();
+        logging.AddNLog(); // 加入 NLog 記錄器
+    });
+
     builder.Services.AddDbContext<AppDbContext>(options =>
-        options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    {
+        options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
+            .UseLoggerFactory(loggerFactory)
+           .EnableSensitiveDataLogging()
+           .EnableDetailedErrors();
+    });
 }
 
 /// <summary>
@@ -120,6 +134,7 @@ void ConfigureServices(WebApplicationBuilder builder)
     // 註冊 Repository 和 UnitOfWork
     builder.Services.AddScoped(typeof(IRepository<>), typeof(RepositoryBase<>));
     builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+    builder.Services.AddScoped(typeof(IAppLogger<>), typeof(AppLogger<>));
 
     // 註冊服務
     builder.Services.AddScoped<BitcoinService>();
@@ -169,6 +184,9 @@ void ConfigureServices(WebApplicationBuilder builder)
 
     // 註冊 HttpContextAccessor，用於訪問 HTTP 上下文
     builder.Services.AddHttpContextAccessor();
+
+    // 
+    builder.Services.AddTransient<SqlLoggingMiddleware>();
 }
 
 /// <summary>
@@ -201,6 +219,11 @@ void ConfigureMiddleware(WebApplication app)
     app.UseAuthorization(); // 啟用授權檢查
     app.UseSession(); // 啟用 Session 管理
 
+    // 設定中介層與路由
+    app.UseRouting();
     // 設定路由
     app.MapControllers(); // 將 Controller 類別映射為路由
+
+    // 
+    app.UseMiddleware<SqlLoggingMiddleware>();
 }
