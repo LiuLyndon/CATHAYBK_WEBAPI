@@ -43,11 +43,6 @@ namespace BasicEIP_Core.Middleware
         /// </summary>
         private async Task HandleExceptionAsync(HttpContext context, Exception exception)
         {
-            string message = "未知錯誤";
-            string details = "未處理的異常類型";
-            string funcId = context.Request.Headers["FUNC_ID"].ToString() ?? "未知";
-            string accountNo = context.Request.Headers["ACNT_NO"].ToString() ?? "未知";
-            string sysDate = DateTime.UtcNow.ToString("yyyyMMddHHmmss");
             object responseData = null;
             string responseCode = "0"; // 默認為失敗
             string responseMessage = "發生內部伺服器錯誤";

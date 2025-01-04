@@ -8,7 +8,7 @@
         public T RSPN_DATA { get; set; }
 
         /// <summary>
-        /// 執行結果代碼 (1=成功, 0=失敗, E000~E002)
+        /// 執行結果代碼
         /// </summary>
         public string RSPN_CODE { get; set; }
 
