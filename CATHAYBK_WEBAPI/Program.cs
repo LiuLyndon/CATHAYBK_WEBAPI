@@ -1,11 +1,8 @@
-using BasicEIP_Core.ApiResponse;
 using BasicEIP_Core.Connection;
 using BasicEIP_Core.Controllers;
 using BasicEIP_Core.Middleware;
-using BasicEIP_Core.Security;
 using BasicEIP_Core.Swagger;
 using Microsoft.AspNetCore.Mvc.Formatters;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
 using NLog.Web;
@@ -20,30 +17,30 @@ try
 
     var builder = WebApplication.CreateBuilder(args);
 
-    // ³]©w NLog ¬° .NET Core ªº¤é»x°O¿ı´£¨ÑªÌ
-    builder.Logging.ClearProviders(); // ²M°£¹w³]ªº¤é»x°O¿ı´£¨ÑªÌ
-    builder.Logging.SetMinimumLevel(Microsoft.Extensions.Logging.LogLevel.Trace); // ³]©w³Ì§C°O¿ıµ¥¯Å¬° Trace
-    builder.Logging.AddNLog(); // ¥[¤J NLog §@¬°¤é»x°O¿ı´£¨ÑªÌ
+    // è¨­å®š NLog ç‚º .NET Core çš„æ—¥èªŒè¨˜éŒ„æä¾›è€…
+    builder.Logging.ClearProviders(); // æ¸…é™¤é è¨­çš„æ—¥èªŒè¨˜éŒ„æä¾›è€…
+    builder.Logging.SetMinimumLevel(Microsoft.Extensions.Logging.LogLevel.Trace); // è¨­å®šæœ€ä½è¨˜éŒ„ç­‰ç´šç‚º Trace
+    builder.Logging.AddNLog(); // åŠ å…¥ NLog ä½œç‚ºæ—¥èªŒè¨˜éŒ„æä¾›è€…
 
-    // °t¸mÀ³¥Îµ{¦¡³]©w¡]¦p³s½u¦r¦ê¡B¨t²Î³]©wµ¥¡^
+    // é…ç½®æ‡‰ç”¨ç¨‹å¼è¨­å®šï¼ˆå¦‚é€£ç·šå­—ä¸²ã€ç³»çµ±è¨­å®šç­‰ï¼‰
     ConfigureAppSettings(builder);
 
-    // °t¸mÀ³¥Îµ{¦¡ªº¨Ì¿àª`¤JªA°È (DI)
+    // é…ç½®æ‡‰ç”¨ç¨‹å¼çš„ä¾è³´æ³¨å…¥æœå‹™ (DI)
     ConfigureServices(builder);
 
-    // «Ø¥ßÀ³¥Îµ{¦¡ª«¥ó
+    // å»ºç«‹æ‡‰ç”¨ç¨‹å¼ç‰©ä»¶
     // ---------------------------------------------------------
     var app = builder.Build();
 
-    // °t¸m¤¤¤¶³nÅé (Middleware)
+    // é…ç½®ä¸­ä»‹è»Ÿé«” (Middleware)
     ConfigureMiddleware(app);
 
-    // ±Ò°ÊÀ³¥Îµ{¦¡
+    // å•Ÿå‹•æ‡‰ç”¨ç¨‹å¼
     app.Run();
 }
 catch (Exception ex)
 {
-    logger.Error(ex, "À³¥Îµ{¦¡¦]¨Ò¥~²×¤î¡C");
+    logger.Error(ex, "æ‡‰ç”¨ç¨‹å¼å› ä¾‹å¤–çµ‚æ­¢ã€‚");
     throw;
 }
 finally
@@ -52,91 +49,71 @@ finally
 }
 
 /// <summary>
-/// °t¸mÀ³¥Îµ{¦¡³]©w
+/// é…ç½®æ‡‰ç”¨ç¨‹å¼è¨­å®š
 /// </summary>
-/// <param name="builder">WebApplication «Øºc¾¹</param>
+/// <param name="builder">WebApplication å»ºæ§‹å™¨</param>
 void ConfigureAppSettings(WebApplicationBuilder builder)
 {
-    // ³]©w ConnectionStrings »P SystemSetting ¦Ü IOptions
+    // è¨­å®š ConnectionStrings èˆ‡ SystemSetting è‡³ IOptions
     builder.Services.Configure<ConnectionStrings>(builder.Configuration.GetSection("ConnectionStrings"));
 }
 
 /// <summary>
-/// °t¸mÀ³¥Îµ{¦¡ªº¨Ì¿àª`¤JªA°È (DI)
+/// é…ç½®æ‡‰ç”¨ç¨‹å¼çš„ä¾è³´æ³¨å…¥æœå‹™ (DI)
 /// </summary>
-/// <param name="builder">WebApplication «Øºc¾¹</param>
+/// <param name="builder">WebApplication å»ºæ§‹å™¨</param>
 void ConfigureServices(WebApplicationBuilder builder)
 {
-    // ³]©w CORS ¬Fµ¦
+    // è¨­å®š CORS æ”¿ç­–
     builder.Services.AddCors(options =>
     {
         options.AddPolicy("AllowAllOrigins", policy =>
         {
-            policy.AllowAnyOrigin() // ¤¹³\¨Ó¦Û¥ô¦ó¨Ó·½ªº½Ğ¨D
+            policy.AllowAnyOrigin() // å…è¨±ä¾†è‡ªä»»ä½•ä¾†æºçš„è«‹æ±‚
                   .AllowAnyMethod()
                   .AllowAnyHeader();
         });
     });
 
-    // °t¸m MVC »P JSON ¿é¥X®æ¦¡
+    // é…ç½® MVC èˆ‡ JSON è¼¸å‡ºæ ¼å¼
     builder.Services.AddControllers(options =>
     {
-        options.RespectBrowserAcceptHeader = false; // ¹w³]¦^¶Ç JSON ®æ¦¡
-        options.OutputFormatters.RemoveType<StringOutputFormatter>(); // ²¾°£¦r¦ê¿é¥X®æ¦¡
-        options.OutputFormatters.RemoveType<HttpNoContentOutputFormatter>(); // ²¾°£ NoContent ®æ¦¡
+        options.RespectBrowserAcceptHeader = false; // é è¨­å›å‚³ JSON æ ¼å¼
+        options.OutputFormatters.RemoveType<StringOutputFormatter>(); // ç§»é™¤å­—ä¸²è¼¸å‡ºæ ¼å¼
+        options.OutputFormatters.RemoveType<HttpNoContentOutputFormatter>(); // ç§»é™¤ NoContent æ ¼å¼
 
         //options.OutputFormatters.Insert(0, new SystemTextJsonOutputFormatter(new JsonSerializerOptions
         //{
-        //    TypeInfoResolver = new DefaultJsonTypeInfoResolver() // ¨Ï¥Î¨t²Î¹w³]ªº JSON ®æ¦¡¤Æ
+        //    TypeInfoResolver = new DefaultJsonTypeInfoResolver() // ä½¿ç”¨ç³»çµ±é è¨­çš„ JSON æ ¼å¼åŒ–
         //}));
     }).AddJsonOptions(options =>
     {
-        options.JsonSerializerOptions.PropertyNamingPolicy = null; // ¸T¥Î©R¦Wµ¦²¤¡A«O«ùÄİ©Ê¦WºÙ¤j¤p¼g¤@­P
+        options.JsonSerializerOptions.PropertyNamingPolicy = null; // ç¦ç”¨å‘½åç­–ç•¥ï¼Œä¿æŒå±¬æ€§åç¨±å¤§å°å¯«ä¸€è‡´
     });
 
-    // Ãö³¬¦Û°Ê¼Ò«¬ÅçÃÒ¿ù»~ªº¦^À³¡A§ï¬°¦Û­q¿ù»~³B²z
+    // é—œé–‰è‡ªå‹•æ¨¡å‹é©—è­‰éŒ¯èª¤çš„å›æ‡‰ï¼Œæ”¹ç‚ºè‡ªè¨‚éŒ¯èª¤è™•ç†
     builder.Services.Configure<ApiBehaviorOptions>(options =>
     {
         options.SuppressModelStateInvalidFilter = true;
     });
 
-    // µù¥UÀ³¥Îµ{¦¡¦Û­qªA°È
-    // builder.Services.AddRepositories(); // µù¥U¸ê®Æ®w­ÜÀxªA°È
-    // builder.Services.AddAppLogging(); // µù¥UÀ³¥Îµ{¦¡¤é»xªA°È
-    // builder.Services.AddSingleton<IJwtUtils, JwtTokenUtil>(); // µù¥U JWT ¤u¨ãÃş§O
+    // è¨»å†Šæ‡‰ç”¨ç¨‹å¼è‡ªè¨‚æœå‹™
+    // builder.Services.AddRepositories(); // è¨»å†Šè³‡æ–™åº«å€‰å„²æœå‹™
+    // builder.Services.AddAppLogging(); // è¨»å†Šæ‡‰ç”¨ç¨‹å¼æ—¥èªŒæœå‹™
 
-    // °t¸m Swagger¡A¥Î©ó API ¤å¥ó¥Í¦¨»P´ú¸Õ
+    // é…ç½® Swaggerï¼Œç”¨æ–¼ API æ–‡ä»¶ç”Ÿæˆèˆ‡æ¸¬è©¦
     builder.Services.AddEndpointsApiExplorer();
 
     string xmlPath = Path.Combine(AppContext.BaseDirectory, $"{System.Reflection.Assembly.GetExecutingAssembly().GetName().Name}.xml");
     builder.Services.AddSwaggerGen(options =>
     {
-        // ³]©w XML µù¸ÑÀÉ®×ªº¦ì¸m
+        // è¨­å®š XML è¨»è§£æª”æ¡ˆçš„ä½ç½®
         options.IncludeXmlComments(xmlPath, includeControllerXmlComments: true);
 
-        // ±Ò¥Î Swagger ¤¤ªº Model ´y­z
+        // å•Ÿç”¨ Swagger ä¸­çš„ Model æè¿°
         options.SchemaFilter<AddModelSummarySchemaFilter>(xmlPath);
 
         options.SwaggerDoc("v1", new OpenApiInfo { Title = "TMS API", Version = "v1" });
-        options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-        {
-            In = ParameterLocation.Header, // JWT ©ñ¦b½Ğ¨Dªº Header
-            Description = "½Ğ¿é¤J JWT Token¡A®æ¦¡¬° Bearer <token>",
-            Name = "Authorization", // Header ªº¦WºÙ
-            Type = SecuritySchemeType.Http, // ±ÂÅvÃş«¬¬° HTTP
-            BearerFormat = "JWT", // «ü©w¨Ï¥Î JWT ®æ¦¡
-            Scheme = "Bearer" // ¨Ï¥Î Bearer ÅçÃÒ
-        });
-        options.AddSecurityRequirement(new OpenApiSecurityRequirement
-        {
-            {
-                new OpenApiSecurityScheme
-                {
-                    Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer" }
-                },
-                Array.Empty<string>() // ¤£»İ­nÃB¥~ªº½d³ò
-            }
-        });
         // 
         options.OperationFilter<DefaultResponseTypeOperationFilter>();
         options.OperationFilter<QueriedResponseTypeOperationFilter>();
@@ -146,44 +123,44 @@ void ConfigureServices(WebApplicationBuilder builder)
 
     });
 
-    // °t¸m Session ©M§Ö¨ú
+    // é…ç½® Session å’Œå¿«å–
     builder.Services.AddSession();
     builder.Services.AddDistributedMemoryCache();
 
-    // µù¥U HttpContextAccessor¡A¥Î©ó³X°İ HTTP ¤W¤U¤å
+    // è¨»å†Š HttpContextAccessorï¼Œç”¨æ–¼è¨ªå• HTTP ä¸Šä¸‹æ–‡
     builder.Services.AddHttpContextAccessor();
 }
 
 /// <summary>
-/// °t¸m¤¤¤¶³nÅé
+/// é…ç½®ä¸­ä»‹è»Ÿé«”
 /// </summary>
-/// <param name="app">WebApplication ¹ê¨Ò</param>
+/// <param name="app">WebApplication å¯¦ä¾‹</param>
 void ConfigureMiddleware(WebApplication app)
 {
-    // ±Ò¥Î Swagger¡A¥Î©ó API ¤å¥ó¥Í¦¨»P´ú¸Õ
+    // å•Ÿç”¨ Swaggerï¼Œç”¨æ–¼ API æ–‡ä»¶ç”Ÿæˆèˆ‡æ¸¬è©¦
     if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
     {
         app.UseSwagger();
         app.UseSwaggerUI(c =>
         {
-            c.RoutePrefix = string.Empty; // ³]©w Swagger UI ¸ô®|¬°®Ú¥Ø¿ı
+            c.RoutePrefix = string.Empty; // è¨­å®š Swagger UI è·¯å¾‘ç‚ºæ ¹ç›®éŒ„
             string swaggerJsonBasePath = string.IsNullOrWhiteSpace(c.RoutePrefix) ? "." : "..";
             c.SwaggerEndpoint($"{swaggerJsonBasePath}/swagger/v1/swagger.json", "My API V1");
         });
     }
 
-    // ±Ò¥Î¦Û­q¤¤¤¶³nÅé
-    app.UseExceptionHandling(); // ³]©w¨Ò¥~³B²z¤¤¤¶³nÅé
-    app.UseRequestLogging(); // ³]©w½Ğ¨D¤é»x¤¤¤¶³nÅé
+    // å•Ÿç”¨è‡ªè¨‚ä¸­ä»‹è»Ÿé«”
+    app.UseExceptionHandling(); // è¨­å®šä¾‹å¤–è™•ç†ä¸­ä»‹è»Ÿé«”
+    app.UseRequestLogging(); // è¨­å®šè«‹æ±‚æ—¥èªŒä¸­ä»‹è»Ÿé«”
 
-    // ±Ò¥Î HTTPS¡BCORS¡BÅçÃÒ»P±ÂÅv
-    app.UseHttpsRedirection(); // ±j¨î±N HTTP ½Ğ¨D­«¾É¨ì HTTPS
-    app.UseCors("AllowAllOrigins"); // ±Ò¥Î¤¹³\©Ò¦³¨Ó·½ªº CORS ¬Fµ¦
-    app.UseAuthentication(); // ±Ò¥Î¨­¥÷ÅçÃÒ
-    // app.UseJwtTokenMonitor(); // ±Ò¥Î¦Û­qªº JWT Token ºÊ±±¤¤¤¶³nÅé
-    app.UseAuthorization(); // ±Ò¥Î±ÂÅvÀË¬d
-    app.UseSession(); // ±Ò¥Î Session ºŞ²z
+    // å•Ÿç”¨ HTTPSã€CORSã€é©—è­‰èˆ‡æˆæ¬Š
+    app.UseHttpsRedirection(); // å¼·åˆ¶å°‡ HTTP è«‹æ±‚é‡å°åˆ° HTTPS
+    app.UseCors("AllowAllOrigins"); // å•Ÿç”¨å…è¨±æ‰€æœ‰ä¾†æºçš„ CORS æ”¿ç­–
+    app.UseAuthentication(); // å•Ÿç”¨èº«ä»½é©—è­‰
+    // app.UseJwtTokenMonitor(); // å•Ÿç”¨è‡ªè¨‚çš„ JWT Token ç›£æ§ä¸­ä»‹è»Ÿé«”
+    app.UseAuthorization(); // å•Ÿç”¨æˆæ¬Šæª¢æŸ¥
+    app.UseSession(); // å•Ÿç”¨ Session ç®¡ç†
 
-    // ³]©w¸ô¥Ñ
-    app.MapControllers(); // ±N Controller Ãş§O¬M®g¬°¸ô¥Ñ
+    // è¨­å®šè·¯ç”±
+    app.MapControllers(); // å°‡ Controller é¡åˆ¥æ˜ å°„ç‚ºè·¯ç”±
 }
