@@ -17,6 +17,8 @@ namespace CATHAYBK_Service.DatabseContext
 
         public DbSet<tblBitcoin> Bitcoins { get; set; }
 
+        public DbSet<tblCurrency> Currencies { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
@@ -61,6 +63,29 @@ namespace CATHAYBK_Service.DatabseContext
                 entity.Property(e => e.CreatedAt)
                       .HasDefaultValueSql("GETDATE()") // 默認值為當前時間
                       .ValueGeneratedOnAdd(); // 指定此欄位僅在新增時生成
+            });
+
+
+            // 配置 tblCurrency 的表屬性
+            modelBuilder.Entity<tblCurrency>(entity =>
+            {
+                entity.ToTable("tblCurrency");
+                entity.HasKey(e => e.Id);
+
+                entity.Property(e => e.Code)
+                      .HasMaxLength(10)
+                      .IsRequired();
+
+                entity.Property(e => e.Name)
+                      .HasMaxLength(10);
+
+                entity.Property(e => e.CreatedAt)
+                      .HasDefaultValueSql("GETDATE()") // 默認值為當前時間
+                      .ValueGeneratedOnAdd(); // 僅在新增時生成
+
+                entity.Property(e => e.UpdatedAt)
+                      .HasDefaultValueSql("GETDATE()") // 默認值為當前時間
+                      .ValueGeneratedOnAddOrUpdate(); // 在新增和更新時生成
             });
         }
     }

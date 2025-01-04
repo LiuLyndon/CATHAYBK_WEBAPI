@@ -5,7 +5,7 @@
     "width": 2000,
     "height": 2000,
     "scrollTop": 0,
-    "scrollLeft": 0,
+    "scrollLeft": -1,
     "zoomLevel": 1,
     "show": 511,
     "database": 2,
@@ -31,7 +31,8 @@
   },
   "doc": {
     "tableIds": [
-      "l3xyoUJ1JbzvMNP55Y2aD"
+      "l3xyoUJ1JbzvMNP55Y2aD",
+      "OzfyRC3w90Y4ExyYmAIR9"
     ],
     "relationshipIds": [],
     "indexIds": [],
@@ -62,16 +63,47 @@
           "5MZY_bVht-f7qggk8AJdE"
         ],
         "ui": {
-          "x": 304,
-          "y": 125,
+          "x": 316,
+          "y": 229,
           "zIndex": 2,
           "widthName": 60,
           "widthComment": 242,
           "color": ""
         },
         "meta": {
-          "updateAt": 1735965259261,
+          "updateAt": 1735988886966,
           "createAt": 1735957044541
+        }
+      },
+      "OzfyRC3w90Y4ExyYmAIR9": {
+        "id": "OzfyRC3w90Y4ExyYmAIR9",
+        "name": "tblCurrency",
+        "comment": "幣別",
+        "columnIds": [
+          "KBJzhLamphw8BRWQQOjb0",
+          "rVIurXwpIHhRivp2ueGBF",
+          "uMHUed_onENU9NXjEucln",
+          "AO0QvrLaL4sDKW7GfLgXH",
+          "RufM8YNty4TCjQtiBBCXF"
+        ],
+        "seqColumnIds": [
+          "KBJzhLamphw8BRWQQOjb0",
+          "rVIurXwpIHhRivp2ueGBF",
+          "uMHUed_onENU9NXjEucln",
+          "AO0QvrLaL4sDKW7GfLgXH",
+          "RufM8YNty4TCjQtiBBCXF"
+        ],
+        "ui": {
+          "x": 294,
+          "y": 34,
+          "zIndex": 3,
+          "widthName": 69,
+          "widthComment": 60,
+          "color": ""
+        },
+        "meta": {
+          "updateAt": 1735988946251,
+          "createAt": 1735983890868
         }
       }
     },
@@ -199,11 +231,111 @@
       "5MZY_bVht-f7qggk8AJdE": {
         "id": "5MZY_bVht-f7qggk8AJdE",
         "tableId": "l3xyoUJ1JbzvMNP55Y2aD",
-        "name": "created_at",
+        "name": "CreatedaAt",
         "comment": "資料建立時間",
         "dataType": "datetime",
         "default": "",
         "options": 8,
+        "ui": {
+          "keys": 0,
+          "widthName": 66,
+          "widthComment": 74,
+          "widthDataType": 60,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1735988896109,
+          "createAt": 1735957338414
+        }
+      },
+      "KBJzhLamphw8BRWQQOjb0": {
+        "id": "KBJzhLamphw8BRWQQOjb0",
+        "tableId": "OzfyRC3w90Y4ExyYmAIR9",
+        "name": "id",
+        "comment": "",
+        "dataType": "int",
+        "default": "",
+        "options": 11,
+        "ui": {
+          "keys": 1,
+          "widthName": 60,
+          "widthComment": 60,
+          "widthDataType": 60,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1735983918533,
+          "createAt": 1735983904187
+        }
+      },
+      "rVIurXwpIHhRivp2ueGBF": {
+        "id": "rVIurXwpIHhRivp2ueGBF",
+        "tableId": "OzfyRC3w90Y4ExyYmAIR9",
+        "name": "code",
+        "comment": "幣別代碼",
+        "dataType": "varchar(10)",
+        "default": "",
+        "options": 12,
+        "ui": {
+          "keys": 0,
+          "widthName": 60,
+          "widthComment": 60,
+          "widthDataType": 67,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1735983962674,
+          "createAt": 1735983916834
+        }
+      },
+      "uMHUed_onENU9NXjEucln": {
+        "id": "uMHUed_onENU9NXjEucln",
+        "tableId": "OzfyRC3w90Y4ExyYmAIR9",
+        "name": "name",
+        "comment": "幣別中文名稱",
+        "dataType": "nvarchar(10)",
+        "default": "",
+        "options": 0,
+        "ui": {
+          "keys": 0,
+          "widthName": 60,
+          "widthComment": 74,
+          "widthDataType": 73,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1735983966062,
+          "createAt": 1735983935251
+        }
+      },
+      "AO0QvrLaL4sDKW7GfLgXH": {
+        "id": "AO0QvrLaL4sDKW7GfLgXH",
+        "tableId": "OzfyRC3w90Y4ExyYmAIR9",
+        "name": "CreatedaAt",
+        "comment": "資料建立時間",
+        "dataType": "datetime",
+        "default": "",
+        "options": 0,
+        "ui": {
+          "keys": 0,
+          "widthName": 66,
+          "widthComment": 74,
+          "widthDataType": 60,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1735988926667,
+          "createAt": 1735988909160
+        }
+      },
+      "RufM8YNty4TCjQtiBBCXF": {
+        "id": "RufM8YNty4TCjQtiBBCXF",
+        "tableId": "OzfyRC3w90Y4ExyYmAIR9",
+        "name": "UpdatedAt",
+        "comment": "資料更新時間",
+        "dataType": "datetime",
+        "default": "",
+        "options": 0,
         "ui": {
           "keys": 0,
           "widthName": 63,
@@ -212,8 +344,8 @@
           "widthDefault": 60
         },
         "meta": {
-          "updateAt": 1735957843589,
-          "createAt": 1735957338414
+          "updateAt": 1735988935840,
+          "createAt": 1735988911931
         }
       }
     },
@@ -305,10 +437,73 @@
       1735957338413,
       -1,
       {
-        "name": 1735957339497,
+        "name": 1735988896108,
         "options(notNull)": 1735957782818,
         "comment": 1735957807886,
         "dataType": 1735957843589
+      }
+    ],
+    "OzfyRC3w90Y4ExyYmAIR9": [
+      "tableEntities",
+      1735983890867,
+      -1,
+      {
+        "name": 1735983894901,
+        "comment": 1735983899312
+      }
+    ],
+    "KBJzhLamphw8BRWQQOjb0": [
+      "tableColumnEntities",
+      1735983904187,
+      -1,
+      {
+        "name": 1735983906837,
+        "dataType": 1735983910351,
+        "options(notNull)": 1735983910915,
+        "options(autoIncrement)": 1735983912906,
+        "options(primaryKey)": 1735983918532
+      }
+    ],
+    "rVIurXwpIHhRivp2ueGBF": [
+      "tableColumnEntities",
+      1735983916833,
+      -1,
+      {
+        "name": 1735983962674,
+        "dataType": 1735983927395,
+        "options(notNull)": 1735983928432,
+        "options(unique)": 1735983929088,
+        "comment": 1735983933998
+      }
+    ],
+    "uMHUed_onENU9NXjEucln": [
+      "tableColumnEntities",
+      1735983935251,
+      -1,
+      {
+        "name": 1735983966061,
+        "dataType": 1735983944204,
+        "comment": 1735983948241
+      }
+    ],
+    "AO0QvrLaL4sDKW7GfLgXH": [
+      "tableColumnEntities",
+      1735988909159,
+      -1,
+      {
+        "name": 1735988910364,
+        "dataType": 1735988921936,
+        "comment": 1735988926666
+      }
+    ],
+    "RufM8YNty4TCjQtiBBCXF": [
+      "tableColumnEntities",
+      1735988911931,
+      -1,
+      {
+        "name": 1735988918418,
+        "dataType": 1735988923099,
+        "comment": 1735988935840
       }
     ]
   }

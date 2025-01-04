@@ -136,9 +136,13 @@ void ConfigureServices(WebApplicationBuilder builder)
     builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
     builder.Services.AddScoped(typeof(IAppLogger<>), typeof(AppLogger<>));
 
+    // 註冊 HttpClient
+    builder.Services.AddHttpClient<CoindeskService>();
     // 註冊服務
     builder.Services.AddScoped<BitcoinService>();
+    builder.Services.AddScoped<CurrencyService>();
 
+    /*
     using (var scope = builder.Services.BuildServiceProvider().CreateScope())
     {
         var serviceProvider = scope.ServiceProvider;
@@ -155,6 +159,7 @@ void ConfigureServices(WebApplicationBuilder builder)
             Console.WriteLine("Failed to resolve BitcoinService.");
         }
     }
+    */
 
     // 配置 Swagger，用於 API 文件生成與測試
     builder.Services.AddEndpointsApiExplorer();

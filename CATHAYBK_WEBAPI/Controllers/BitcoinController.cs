@@ -27,7 +27,7 @@ namespace CATHAYBK_WEBAPI.Controllers
         public async Task<IActionResult> GetAll()
         {
             var bitcoins = await _bitcoinService.GetAllAsync();
-            return Ok(bitcoins);
+            return Ok(bitcoins.OrderBy(c => c.Code));
         }
 
         [HttpGet("{id}")]
@@ -63,6 +63,7 @@ namespace CATHAYBK_WEBAPI.Controllers
         }
 
         [HttpPut("{id}")]
+        [CreatedResponseType(typeof(ApiResponse<int>))]
 
         public async Task<IActionResult> Update(int id, tblBitcoin bitcoin)
         {
@@ -76,6 +77,7 @@ namespace CATHAYBK_WEBAPI.Controllers
         }
 
         [HttpDelete("{id}")]
+        [CreatedResponseType(typeof(ApiResponse<int>))]
         public async Task<IActionResult> Delete(int id)
         {
             var bitcoin = await _bitcoinService.GetByIdAsync(id);
