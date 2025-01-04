@@ -1,0 +1,313 @@
+{
+	"info": {
+		"_postman_id": "b6cce7cd-69bf-4c18-bbb2-fcfba7657564",
+		"name": "CATHYBK",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "558062",
+		"_collection_link": "https://universal-eclipse-81223.postman.co/workspace/Systex_Tomsworld~e7dad850-7b56-447b-9477-7a74d83fbdd2/collection/558062-b6cce7cd-69bf-4c18-bbb2-fcfba7657564?action=share&source=collection_link&creator=558062"
+	},
+	"item": [
+		{
+			"name": "Bitcoin",
+			"item": [
+				{
+					"name": "GetBitcoinAllData",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{CATHAYBKAPI}}/api/Bitcoin",
+							"host": [
+								"{{CATHAYBKAPI}}"
+							],
+							"path": [
+								"api",
+								"Bitcoin"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetBitcoin/{id}",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{CATHAYBKAPI}}/api/Bitcoin/1",
+							"host": [
+								"{{CATHAYBKAPI}}"
+							],
+							"path": [
+								"api",
+								"Bitcoin",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CreateBitcoin",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Code\": \"USD\",\r\n    \"Symbol\": \"$\",\r\n    \"Rate\": \"99024.449\",\r\n    \"Description\": \"United States Dollar\",\r\n    \"RateFloat\": 99024.4451\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{CATHAYBKAPI}}/api/Bitcoin",
+							"host": [
+								"{{CATHAYBKAPI}}"
+							],
+							"path": [
+								"api",
+								"Bitcoin"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateBitcoin",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Id\": 1,\r\n    \"Code\": \"USD\",\r\n    \"Symbol\": \"$\",\r\n    \"Rate\": \"99024.445\",\r\n    \"Description\": \"United States Dollar\",\r\n    \"RateFloat\": 99024.4451\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{CATHAYBKAPI}}/api/Bitcoin/1",
+							"host": [
+								"{{CATHAYBKAPI}}"
+							],
+							"path": [
+								"api",
+								"Bitcoin",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteBitcoin",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{CATHAYBKAPI}}/api/Bitcoin/1",
+							"host": [
+								"{{CATHAYBKAPI}}"
+							],
+							"path": [
+								"api",
+								"Bitcoin",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Coindesk",
+			"item": [
+				{
+					"name": "FetchAndSave",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{CATHAYBKAPI}}/api/Coindesk/FetchAndSave",
+							"host": [
+								"{{CATHAYBKAPI}}"
+							],
+							"path": [
+								"api",
+								"Coindesk",
+								"FetchAndSave"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetCurrencies",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{CATHAYBKAPI}}/api/Coindesk/Currencies",
+							"host": [
+								"{{CATHAYBKAPI}}"
+							],
+							"path": [
+								"api",
+								"Coindesk",
+								"Currencies"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CreateCurrencies",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"Code\": \"EUR\",\r\n  \"Name\": \"歐元\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{CATHAYBKAPI}}/api/Coindesk/Currencies",
+							"host": [
+								"{{CATHAYBKAPI}}"
+							],
+							"path": [
+								"api",
+								"Coindesk",
+								"Currencies"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateCurrencies/{id}",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"Code\": \"USD\",\r\n  \"Name\": \"美元\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{CATHAYBKAPI}}/api/Coindesk/Currencies/1",
+							"host": [
+								"{{CATHAYBKAPI}}"
+							],
+							"path": [
+								"api",
+								"Coindesk",
+								"Currencies",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteCurrencies/{id}",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{CATHAYBKAPI}}/api/Coindesk/Currencies/1",
+							"host": [
+								"{{CATHAYBKAPI}}"
+							],
+							"path": [
+								"api",
+								"Coindesk",
+								"Currencies",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
