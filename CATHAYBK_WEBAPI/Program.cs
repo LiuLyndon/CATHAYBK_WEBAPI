@@ -1,4 +1,3 @@
-using BasicEIP_Core.Connection;
 using BasicEIP_Core.Controllers;
 using BasicEIP_Core.Middleware;
 using BasicEIP_Core.Swagger;
@@ -8,6 +7,12 @@ using Microsoft.OpenApi.Models;
 using NLog.Web;
 using NLog;
 using NLog.Extensions.Logging;
+using BasicEIP_Core.Repositories;
+using CATHAYBK_Service.Repositories;
+using CATHAYBK_Service.Service;
+using CATHAYBK_Service.Base;
+using CATHAYBK_Service.DatabseContext;
+using Microsoft.EntityFrameworkCore;
 
 var logger = NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
 
@@ -32,6 +37,14 @@ try
     // ---------------------------------------------------------
     var app = builder.Build();
 
+    // 在應用程式啟動前，確保資料庫已創建
+    // ---------------------------------------------------------
+    using (var scope = app.Services.CreateScope())
+    {
+        var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        dbContext.Database.EnsureCreated(); // 如果資料庫和資料表不存在則創建
+    }
+
     // 配置中介軟體 (Middleware)
     ConfigureMiddleware(app);
 
@@ -55,7 +68,10 @@ finally
 void ConfigureAppSettings(WebApplicationBuilder builder)
 {
     // 設定 ConnectionStrings 與 SystemSetting 至 IOptions
-    builder.Services.Configure<ConnectionStrings>(builder.Configuration.GetSection("ConnectionStrings"));
+    //builder.Services.Configure<ConnectionStrings>(builder.Configuration.GetSection("ConnectionStrings"));
+
+    builder.Services.AddDbContext<AppDbContext>(options =>
+        options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 }
 
 /// <summary>
@@ -101,6 +117,30 @@ void ConfigureServices(WebApplicationBuilder builder)
     // builder.Services.AddRepositories(); // 註冊資料庫倉儲服務
     // builder.Services.AddAppLogging(); // 註冊應用程式日誌服務
 
+    // 註冊 Repository 和 UnitOfWork
+    builder.Services.AddScoped(typeof(IRepository<>), typeof(RepositoryBase<>));
+    builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+    // 註冊服務
+    builder.Services.AddScoped<BitcoinService>();
+
+    using (var scope = builder.Services.BuildServiceProvider().CreateScope())
+    {
+        var serviceProvider = scope.ServiceProvider;
+
+        // 測試解析 BitcoinService
+        var bitcoinService = serviceProvider.GetService<BitcoinService>();
+
+        if (bitcoinService != null)
+        {
+            Console.WriteLine("BitcoinService resolved successfully!");
+        }
+        else
+        {
+            Console.WriteLine("Failed to resolve BitcoinService.");
+        }
+    }
+
     // 配置 Swagger，用於 API 文件生成與測試
     builder.Services.AddEndpointsApiExplorer();
 
@@ -113,7 +153,7 @@ void ConfigureServices(WebApplicationBuilder builder)
         // 啟用 Swagger 中的 Model 描述
         options.SchemaFilter<AddModelSummarySchemaFilter>(xmlPath);
 
-        options.SwaggerDoc("v1", new OpenApiInfo { Title = "TMS API", Version = "v1" });
+        options.SwaggerDoc("v1", new OpenApiInfo { Title = "CATHAYBK API", Version = "v1" });
         // 
         options.OperationFilter<DefaultResponseTypeOperationFilter>();
         options.OperationFilter<QueriedResponseTypeOperationFilter>();
@@ -145,7 +185,7 @@ void ConfigureMiddleware(WebApplication app)
         {
             c.RoutePrefix = string.Empty; // 設定 Swagger UI 路徑為根目錄
             string swaggerJsonBasePath = string.IsNullOrWhiteSpace(c.RoutePrefix) ? "." : "..";
-            c.SwaggerEndpoint($"{swaggerJsonBasePath}/swagger/v1/swagger.json", "My API V1");
+            c.SwaggerEndpoint($"{swaggerJsonBasePath}/swagger/v1/swagger.json", "CATHAYBK API V1");
         });
     }
 

@@ -1,21 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Text.Json.Serialization;
 
-namespace CATHAYBK_Model.Database
+namespace CATHAYBK_Model.WEBAPI.Bitcoin
 {
-    /// <summary>
-    /// 用來記錄比特幣的價格詳細數據（不同貨幣）
-    /// </summary>
-    public class tblBitcoin
-    {
-        /// <summary>
-        /// 唯一識別碼
-        /// </summary>
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
-
+	public class CreateBitcoinRequest
+	{
         /// <summary>
         /// 貨幣代碼，例如 USD、GBP、EUR
         /// </summary>
@@ -50,13 +38,6 @@ namespace CATHAYBK_Model.Database
         [Required]
         [Range(typeof(decimal), "0", "999999999999.999999", ErrorMessage = "RateFloat must be between 0 and 999999999999.999999")]
         public decimal RateFloat { get; set; }
-
-        /// <summary>
-        /// 資料建立時間
-        /// </summary>
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)] // 表示此屬性由資料庫生成
-        [JsonIgnore] // 排除序列化
-        public DateTime CreatedAt { get; set; }
     }
 }
 

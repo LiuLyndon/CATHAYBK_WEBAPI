@@ -6,4 +6,12 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="WEBAPI\" />
+    <None Remove="WEBAPI\Bitcoin\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="WEBAPI\" />
+    <Folder Include="WEBAPI\Bitcoin\" />
+  </ItemGroup>
 </Project>

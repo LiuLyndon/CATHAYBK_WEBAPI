@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using BasicEIP_Core.ApiResponse;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using System.Net;
+using System.Text.Json;
 
 namespace BasicEIP_Core.Middleware
 {
@@ -43,12 +45,42 @@ namespace BasicEIP_Core.Middleware
         /// </summary>
         private async Task HandleExceptionAsync(HttpContext context, Exception exception)
         {
+            var code = HttpStatusCode.InternalServerError; // 預設為 500
+            string responseMessage = "伺服器內部錯誤"; // 預設錯誤訊息
             object responseData = null;
-            string responseCode = "0"; // 默認為失敗
-            string responseMessage = "發生內部伺服器錯誤";
 
-            var code = HttpStatusCode.InternalServerError;
+            // 根據異常類型調整狀態碼和訊息
+            switch (exception)
+            {
+                case ArgumentNullException:
+                    code = HttpStatusCode.BadRequest;
+                    responseMessage = "請求參數錯誤";
+                    break;
 
+                case UnauthorizedAccessException:
+                    code = HttpStatusCode.Unauthorized;
+                    responseMessage = "未經授權的請求";
+                    break;
+
+                // 其他特定異常類型處理...
+                default:
+                    _logger.LogError(exception, "未預期的錯誤");
+                    break;
+            }
+
+            // 統一的 API 回應格式
+            var response = new ApiResponse<object>(responseData, responseMessage);
+
+            // 設置 HTTP 狀態碼和回應格式
+            context.Response.ContentType = "application/json";
+            context.Response.StatusCode = (int)code;
+
+            // 將回應序列化為 JSON 並回傳
+            await context.Response.WriteAsync(JsonSerializer.Serialize(response, new JsonSerializerOptions
+            {
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase, // 使用駝峰命名策略
+                WriteIndented = true // 格式化輸出
+            }));
         }
     }
 

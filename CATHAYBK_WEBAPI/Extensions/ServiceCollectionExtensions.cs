@@ -1,6 +1,7 @@
 ﻿using BasicEIP_Core.NLog;
+using CATHAYBK_Service.Repositories;
 using System.Reflection;
-using CATHAYBK_Service.Base;
+using TMSERP_Service.Base;
 
 namespace TMSAPP_WEBAPI.Extensions
 {
@@ -18,11 +19,11 @@ namespace TMSAPP_WEBAPI.Extensions
         {
             var assembly = Assembly.Load("CATHAYBK_Service");
 
-            // AddRepositories(services, assembly);
-            // AddServices(services, assembly);
+            AddServices(services, assembly);
 
             return services;
         }
+
         /// <summary>
         /// App Logging
         /// </summary>
@@ -33,7 +34,12 @@ namespace TMSAPP_WEBAPI.Extensions
             services.AddScoped(typeof(IAppLogger<>), typeof(AppLogger<>));
             return services;
         }
-        /*
+
+        /// <summary>
+        /// AddServices
+        /// </summary>
+        /// <param name="services"></param>
+        /// <param name="assembly"></param>
         private static void AddServices(IServiceCollection services, Assembly assembly)
         {
             var serviceTypes = assembly.GetTypes()
@@ -48,24 +54,5 @@ namespace TMSAPP_WEBAPI.Extensions
                 services.AddScoped(type);
             }
         }
-        */
-        /*
-        private static void AddRepositories(IServiceCollection services, Assembly assembly)
-        {
-            var repositoryTypes = assembly.GetTypes().Where(t => !t.IsAbstract &&
-                                                         t.BaseType != null &&
-                                                         t.BaseType.IsGenericType &&
-                                                         t.BaseType.GetGenericTypeDefinition() == typeof(RepositoryBase<,>));
-
-            foreach (var repositoryType in repositoryTypes)
-            {
-                var loggerInterface = typeof(IAppLogger<>).MakeGenericType(repositoryType);
-                var loggerImplementation = typeof(AppLogger<>).MakeGenericType(repositoryType);
-
-                services.AddSingleton(loggerInterface, loggerImplementation);
-                services.AddScoped(repositoryType);
-            }
-        }
-        */
     }
 }

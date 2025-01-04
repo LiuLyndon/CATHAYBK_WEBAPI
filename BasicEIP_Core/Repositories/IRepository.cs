@@ -9,10 +9,12 @@ namespace BasicEIP_Core.Repositories
         Task DeleteAsync(T entity);
     }
 
-
-    public interface IUnitOfWork
+    public interface IUnitOfWork : IDisposable
     {
         IRepository<T> Repository<T>() where T : class;
-        Task SaveChangesAsync();
+        Task<int> SaveChangesAsync();
+        void BeginTransaction();
+        Task CommitAsync();
+        Task RollbackAsync();
     }
 }

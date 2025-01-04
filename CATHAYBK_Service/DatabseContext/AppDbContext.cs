@@ -40,8 +40,8 @@ namespace CATHAYBK_Service.DatabseContext
                       .IsRequired();
 
                 entity.Property(e => e.CreatedAt)
-                      .IsRequired()
-                      .HasDefaultValueSql("GETDATE()"); // 默認值為當前時間
+                      .HasDefaultValueSql("GETDATE()") // 默認值為當前時間
+                      .ValueGeneratedOnAdd(); // 指定此欄位僅在新增時生成
             });
         }
     }
