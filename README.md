@@ -50,7 +50,7 @@
 - OrderBy(c => c.Code)
 
 ### 所有功能均須包含單元測試。 
-- CATHAYBK_WEBAPI.Tests (這部分沒有實作完全)
+- CATHAYBK_WEBAPI.Tests (未完全)
 - Postmen 有包含每支 API 的範例 (已完成)
 
 ### 印出所有 API 被呼叫以及呼叫外部 API 的 request and response body log (已完成)
@@ -67,7 +67,7 @@
 
 ### 多語系設計 (未處理)
 
-### design pattern 實作 (部分使用)
+### design pattern 實作 (使用)
 - 1. Repository Pattern (資料存取層)
 - var bitcoins = await _bitcoinService.GetAllAsync();
 - 2. Dependency Injection (依賴注入)

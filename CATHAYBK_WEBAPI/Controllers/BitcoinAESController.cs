@@ -39,14 +39,14 @@ namespace CATHAYBK_WEBAPI.Controllers
                 // 將敏感資料加密
                 var encryptedBitcoins = bitcoins.Select(b => new
                 {
-                    EncryptedCode = _aesService.Encrypt(b.Code), // 將 Code 加密
+                    Code = b.Code, // 將 Code 加密
                     Symbol = b.Symbol,
-                    Rate = b.Rate,
+                    Rate = _aesService.Encrypt($"{b.Rate}"), // 加密 Code
                     Description = b.Description,
-                    RateFloat = b.RateFloat
-                });
+                    RateFloat = _aesService.Encrypt($"{b.RateFloat}") // 加密 Code
+                }); 
 
-                return Ok(new ApiResponse<IEnumerable<object>>(encryptedBitcoins.OrderBy(c => c.EncryptedCode), "成功"));
+                return Ok(new ApiResponse<IEnumerable<object>>(encryptedBitcoins.OrderBy(c => c.Code), "成功"));
             }
             catch (Exception ex)
             {
@@ -75,11 +75,11 @@ namespace CATHAYBK_WEBAPI.Controllers
                 // 將資料加密後返回
                 var encryptedResult = new
                 {
-                    EncryptedCode = _aesService.Encrypt(bitcoin.Code), // 加密 Code
+                    Code = bitcoin.Code,
                     Symbol = bitcoin.Symbol,
-                    Rate = bitcoin.Rate,
+                    Rate = _aesService.Encrypt($"{bitcoin.Rate}"), // 加密 Code
                     Description = bitcoin.Description,
-                    RateFloat = bitcoin.RateFloat
+                    RateFloat = _aesService.Encrypt($"{bitcoin.RateFloat}") // 加密 Code
                 };
 
                 return Ok(new ApiResponse<object>(encryptedResult, "成功"));

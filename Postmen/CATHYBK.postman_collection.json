@@ -78,7 +78,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"Code\": \"USD\",\r\n    \"Symbol\": \"$\",\r\n    \"Rate\": \"99024.449\",\r\n    \"Description\": \"United States Dollar\",\r\n    \"RateFloat\": 99024.4451\r\n}",
+							"raw": "{\r\n    \"Code\": \"USD\",\r\n    \"Symbol\": \"$\",\r\n    \"Rate\": \"99024.000\",\r\n    \"Description\": \"United States Dollar\",\r\n    \"RateFloat\": 99024.000\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -302,6 +302,72 @@
 								"Coindesk",
 								"Currencies",
 								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "BitcoinAES",
+			"item": [
+				{
+					"name": "GetBitcoinAllData",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{CATHAYBKAPI}}/api/Bitcoin",
+							"host": [
+								"{{CATHAYBKAPI}}"
+							],
+							"path": [
+								"api",
+								"Bitcoin"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetBitcoinAES/{AES_id}",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{CATHAYBKAPI}}/api/BitcoinAES/paUBBT7ms7ZJu7NAj4aCTA==",
+							"host": [
+								"{{CATHAYBKAPI}}"
+							],
+							"path": [
+								"api",
+								"BitcoinAES",
+								"paUBBT7ms7ZJu7NAj4aCTA=="
 							]
 						}
 					},
