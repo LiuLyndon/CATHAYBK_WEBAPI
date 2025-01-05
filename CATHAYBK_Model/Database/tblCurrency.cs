@@ -4,6 +4,9 @@ using System.Text.Json.Serialization;
 
 namespace CATHAYBK_Model.Database
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class tblCurrency
     {
         public int Id { get; set; }
