@@ -1,58 +1,47 @@
+using BasicEIP_Core.Repositories;
 using CATHAYBK_Model.Database;
-using CATHAYBK_Model.WEBAPI.Coindesk;
-using CATHAYBK_Service.DatabseContext;
-using Microsoft.EntityFrameworkCore;
+using CATHAYBK_Service.Base;
+using Microsoft.Extensions.Logging;
 
 namespace CATHAYBK_Service.Service
 {
-    public class CurrencyService
+    public class CurrencyService : ServiceBase<CurrencyService>
     {
-        private readonly AppDbContext _context;
+        private readonly IRepository<tblCurrency> _currencyRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public CurrencyService(AppDbContext context)
+        public CurrencyService(IUnitOfWork unitOfWork, ILogger<CurrencyService> logger) : base(logger)
         {
-            _context = context;
+            _unitOfWork = unitOfWork;
+            _currencyRepository = unitOfWork.Repository<tblCurrency>();
         }
 
         public async Task<IEnumerable<tblCurrency>> GetAllAsync()
         {
-            return await _context.Currencies.ToListAsync();
+            return await _currencyRepository.GetAllAsync();
         }
 
-        public async Task AddAsync(CurrencyRequert requert)
+        public async Task<tblCurrency> GetByIdAsync(int id)
         {
-            var currency = new tblCurrency
-            {
-                Code = requert.Code,
-                Name = requert.Name
-            };
-            _context.Currencies.Add(currency);
-            await _context.SaveChangesAsync();
+            return await _currencyRepository.GetByIdAsync(id);
         }
 
-        public async Task UpdateAsync(int id, CurrencyRequert requert)
+        public async Task AddAsync(tblCurrency data)
         {
-            var currency = await _context.Currencies.FindAsync(id);
-            if (currency == null)
-            {
-                throw new KeyNotFoundException("Currency not found");
-            }
-
-            currency.Code = requert.Code;
-            currency.Name = requert.Name;
-            await _context.SaveChangesAsync();
+            await _currencyRepository.AddAsync(data);
+            await _unitOfWork.SaveChangesAsync();
         }
 
-        public async Task DeleteAsync(int id)
+        public async Task UpdateAsync(tblCurrency data)
         {
-            var currency = await _context.Currencies.FindAsync(id);
-            if (currency == null)
-            {
-                throw new KeyNotFoundException("Currency not found");
-            }
+            await _currencyRepository.UpdateAsync(data);
+            await _unitOfWork.SaveChangesAsync();
+        }
 
-            _context.Currencies.Remove(currency);
-            await _context.SaveChangesAsync();
+        public async Task DeleteAsync(tblCurrency data)
+        {
+            await _currencyRepository.DeleteAsync(data);
+            await _unitOfWork.SaveChangesAsync();
         }
     }
 }

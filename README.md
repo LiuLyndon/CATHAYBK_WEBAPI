@@ -1,21 +1,7 @@
 # CATHAYBK 系統專案
-
 此專案包含多個模組與功能，旨在提供高效且易於維護的 WebAPI 架構，並包含測試、規格文件與範本配置。
 
-## 專案結構
-CATHAYBK
-├── BasicEIP_Core               // 核心功能與基礎邏輯層
-├── CATHAYBK_Model              // 資料模型與 DTO 定義
-├── CATHAYBK_Service            // 業務邏輯層
-├── CATHAYBK_WEBAPI             // WebAPI 入口點
-├── CATHAYBK_WEBAPI.Tests       // 測試專案，針對 CATHAYBK_WEBAPI
-├── Postmen                     // 測試範本 (Postman Collection)
-└── Spec                        // 規格文件與資料庫設定
-
----
-
 ## 功能介紹
-
 ### 1. **BasicEIP_Core**
 - 負責系統的基礎功能與核心邏輯。
 - 包含通用邏輯、工具類別及跨層共用的模組。
@@ -45,24 +31,65 @@ CATHAYBK
 - 包含系統規格文件與資料庫設定。
 - 提供詳細的資料表結構與關聯設計。
 
----
+--------------------
+總開發時程約 10小時
+## 完成項目如下
 
-## 系統需求
+### 資料庫 
+- SQL Server Express LocalDB（Entity Framework Core） 
+- SQL 處理都會在 /logs/*.log
+- Microsoft.EntityFrameworkCore.Database.Command
 
-- **.NET Core 8.0 或更高版本**
-- **SQL Server** (資料庫支援)
-- **Postman** (API 測試工具)
+### 功能簡述
+- 1. 呼叫 coindesk API，解析其下行內容與資料轉換，並實作新的 API。(已完成)
+- API 路徑為 api/Coindesk/FetchAndSaveBitcoinData 
+- 2. 建立一張幣別與其對應中文名稱的資料表（需附建立SQL語法），並提供查詢/新增/修改/刪除功能 API。(已完成)
+- tblCurrency 幣別 (API/Coindesk)
+- tblBitcoin 用來記錄比特幣的價格詳細數據 (API/Bitcoin)
+- 3. 查詢幣別請依照幣別代碼排序。(已完成)
+- OrderBy(c => c.Code)
 
----
+### 所有功能均須包含單元測試。 
+- CATHAYBK_WEBAPI.Tests (這部分沒有實作完全)
+- Postmen 有包含每支 API 的範例 (已完成)
 
-## 環境設定
+### 印出所有 API 被呼叫以及呼叫外部 API 的 request and response body log (已完成)
+- /logs/*.log
+- 範例：BasicEIP_Core.Middleware.RequestLoggingMiddleware|HTTP Response|****
 
-### 1. 資料庫配置
-1. 確保您的環境已安裝 SQL Server。
-2. 從 `Spec/Database/` 資料夾中找到對應的 `SQL Schema`，並執行腳本以初始化資料庫。
+### Error handling 處理 API response (已完成)
+- BasicEIP_Core/Middleware/ExceptionHandlingMiddleware
+- 錯誤問題會統一在這邊進行處理
 
-### 2. 啟動專案
-1. 克隆專案：
-   ```bash
-   git clone <repo-url>
-   cd CATHAYBK
+### swagger-ui (已完成)
+- CATHAYBK_WEBAPI/Program.cs
+- builder.Services.AddSwaggerGen 加上 Swagger
+
+### 多語系設計 (未處理)
+
+### design pattern 實作 (部分使用)
+- 1. Repository Pattern (資料存取層)
+- var bitcoins = await _bitcoinService.GetAllAsync();
+- 2. Dependency Injection (依賴注入)
+- public BitcoinController(
+-    BitcoinService bitcoinService,
+-    IAppLogger<BitcoinController> logger) : base(logger)
+- {
+-    _bitcoinService = bitcoinService;
+- }
+- 3. Singleton Pattern (單例模式)
+- builder.Services.AddSingleton<AESService>(...);
+- 4. Factory Method Pattern (工廠方法模式)
+- var loggerFactory = LoggerFactory.Create(logging =>
+- {
+-     logging.ClearProviders();
+-     logging.AddNLog();
+- });
+
+### 能夠運行在 Docker (未完成)
+- docker-compose
+- 有試著實作，但未完成，還沒有進行部署與測試
+
+### 加解密技術應用 AES (已完成)
+- CATHAYBK_WEBAPI/appsettings.json : AESConfig
+- BitcoinAESController 進行簡單的 AES 只實作 GetBitcoins & GetBitcoinById

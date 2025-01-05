@@ -14,7 +14,7 @@ using CATHAYBK_Service.Base;
 using CATHAYBK_Service.DatabseContext;
 using Microsoft.EntityFrameworkCore;
 using BasicEIP_Core.NLog;
-using Microsoft.Extensions.Logging;
+using BasicEIP_Core.Security;
 
 var logger = NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
 
@@ -117,6 +117,14 @@ void ConfigureServices(WebApplicationBuilder builder)
                   .AllowAnyMethod()
                   .AllowAnyHeader();
         });
+    });
+
+    // 註冊 AESService
+    builder.Services.AddSingleton<AESService>(provider =>
+    {
+        var configuration = provider.GetRequiredService<IConfiguration>();
+        var aesConfig = configuration.GetSection("AESConfig");
+        return new AESService(aesConfig["Key"], aesConfig["IV"]);
     });
 
     // 配置 MVC 與 JSON 輸出格式

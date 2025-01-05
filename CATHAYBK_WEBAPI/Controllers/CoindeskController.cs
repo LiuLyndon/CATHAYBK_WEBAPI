@@ -1,3 +1,5 @@
+using BasicEIP_Core.ApiResponse;
+using BasicEIP_Core.Controllers;
 using CATHAYBK_Model.Database;
 using CATHAYBK_Model.WEBAPI.Coindesk;
 using CATHAYBK_Service.Service;
@@ -23,79 +25,167 @@ namespace CATHAYBK_WEBAPI.Base
             _bitcoinService = bitcoinService;
         }
 
-        // 1. Fetch and Save Bitcoin data from Coindesk API
-        [HttpGet("FetchAndSave")]
-        public async Task<IActionResult> FetchAndSave()
-        {
-            // 呼叫 Coindesk API
-            var coindeskResponse = await _coindeskService.GetCurrentPriceAsync();
-
-            // 解析並轉換資料
-            foreach (var bpi in coindeskResponse.Bpi)
-            {
-                string currencyCode = bpi.Key; // 鍵：幣別代碼，例如 "USD"
-                CurrencyInfo currencyInfo = bpi.Value; // 值：CurrencyInfo 物件
-
-                var bitcoin = new tblBitcoin
-                {
-                    Code = currencyInfo.Code,
-                    Symbol = currencyInfo.Symbol,
-                    Rate = decimal.Parse(currencyInfo.Rate.Replace(",", "")),
-                    Description = currencyInfo.Description,
-                    RateFloat = currencyInfo.rate_float,
-                    CreatedAt = DateTime.UtcNow
-                };
-
-                // 寫入資料庫
-                await _bitcoinService.AddAsync(bitcoin);
-            }
-
-            return Ok("Data fetched and saved successfully.");
-        }
-
-        // 2. Get all currencies (Read)
-        [HttpGet("Currencies")]
-        public async Task<IActionResult> GetAllCurrencies()
-        {
-            var currencies = await _currencyService.GetAllAsync();
-            return Ok(currencies.OrderBy(c => c.Code));
-        }
-
-        // 3. Add a new currency (Create)
-        [HttpPost("Currencies")]
-        public async Task<IActionResult> AddCurrency([FromBody] CurrencyRequert requert)
-        {
-            await _currencyService.AddAsync(requert);
-            return Created("", requert);
-        }
-
-        // 4. Update an existing currency (Update)
-        [HttpPut("Currencies/{id}")]
-        public async Task<IActionResult> UpdateCurrency(int id, [FromBody] CurrencyRequert requert)
+        /// <summary>
+        /// 從 Coindesk API 抓取並儲存 Bitcoin 資料
+        /// </summary>
+        /// <returns>操作結果</returns>
+        [HttpGet("fetch-and-save")]
+        [DefaultResponseType(typeof(ApiResponse<string>))]
+        public async Task<IActionResult> FetchAndSaveBitcoinData()
         {
             try
             {
-                await _currencyService.UpdateAsync(id, requert);
-                return NoContent();
+                var coindeskResponse = await _coindeskService.GetCurrentPriceAsync();
+
+                foreach (var bpi in coindeskResponse.Bpi)
+                {
+                    var bitcoin = new tblBitcoin
+                    {
+                        Code = bpi.Value.Code,
+                        Symbol = bpi.Value.Symbol,
+                        Rate = decimal.Parse(bpi.Value.Rate.Replace(",", "")),
+                        Description = bpi.Value.Description,
+                        RateFloat = bpi.Value.rate_float,
+                        CreatedAt = DateTime.UtcNow
+                    };
+
+                    await _bitcoinService.AddAsync(bitcoin);
+                }
+
+                return Ok(new ApiResponse<string>("資料已成功抓取並儲存", "成功"));
             }
-            catch (KeyNotFoundException ex)
+            catch (Exception ex)
             {
-                return NotFound(new { message = ex.Message });
+                return StatusCode(500, new ApiResponse<string>(null, $"伺服器錯誤: {ex.Message}"));
             }
         }
 
-        // 5. Delete a currency (Delete)
-        [HttpDelete("Currencies/{id}")]
+        /// <summary>
+        /// 取得所有貨幣資料
+        /// </summary>
+        /// <returns>貨幣清單</returns>
+        [HttpGet("currencies")]
+        [QueriedResponseType(typeof(ApiResponse<IEnumerable<tblCurrency>>))]
+        public async Task<IActionResult> GetCurrencies()
+        {
+            try
+            {
+                var currencies = await _currencyService.GetAllAsync();
+                return Ok(new ApiResponse<IEnumerable<tblCurrency>>(currencies.OrderBy(c => c.Code), "成功"));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new ApiResponse<string>(null, $"伺服器錯誤: {ex.Message}"));
+            }
+        }
+
+
+        /// <summary>
+        /// 根據 ID 取得貨幣資料
+        /// </summary>
+        /// <param name="id">貨幣 ID</param>
+        /// <returns>貨幣資料</returns>
+        [HttpGet("currencies/{id}")]
+        [QueriedResponseType(typeof(ApiResponse<tblCurrency>))]
+        public async Task<IActionResult> GetCurrencyById(int id)
+        {
+            try
+            {
+                var currency = await _currencyService.GetByIdAsync(id);
+                if (currency == null)
+                    return NotFound(new ApiResponse<string>(null, "找不到指定的資料"));
+
+                return Ok(new ApiResponse<tblCurrency>(currency, "成功"));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new ApiResponse<string>(null, $"伺服器錯誤: {ex.Message}"));
+            }
+        }
+
+        /// <summary>
+        /// 新增貨幣資料
+        /// </summary>
+        /// <param name="request">貨幣請求資料</param>
+        /// <returns>新增的貨幣</returns>
+        [HttpPost("currencies")]
+        [CreatedResponseType(typeof(ApiResponse<tblCurrency>))]
+        public async Task<IActionResult> CreateCurrency([FromBody] CurrencyRequert request)
+        {
+            try
+            {
+                var currency = new tblCurrency
+                {
+                    Code = request.Code,
+                    Name = request.Name
+                };
+
+                await _currencyService.AddAsync(currency);
+                return CreatedAtAction(nameof(GetCurrencyById), new { id = currency.Id }, new ApiResponse<tblCurrency>(currency, "新增成功"));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new ApiResponse<string>(null, $"伺服器錯誤: {ex.Message}"));
+            }
+        }
+
+        /// <summary>
+        /// 更新貨幣資料
+        /// </summary>
+        /// <param name="id">貨幣 ID</param>
+        /// <param name="request">更新請求資料</param>
+        /// <returns>更新結果</returns>
+        [HttpPut("currencies/{id}")]
+        [UpdatedResponseType(typeof(ApiResponse<string>))]
+        public async Task<IActionResult> UpdateCurrency(int id, [FromBody] CurrencyRequert request)
+        {
+            try
+            {
+                var currency = await _currencyService.GetByIdAsync(id);
+                if (currency == null)
+                    return NotFound(new ApiResponse<string>(null, "找不到指定的資料"));
+
+                currency.Code = request.Code;
+                currency.Name = request.Name;
+
+                await _currencyService.UpdateAsync(currency);
+                return Ok(new ApiResponse<string>("更新成功", "成功"));
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new ApiResponse<string>(null, ex.Message));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new ApiResponse<string>(null, $"伺服器錯誤: {ex.Message}"));
+            }
+        }
+
+        /// <summary>
+        /// 刪除貨幣資料
+        /// </summary>
+        /// <param name="id">貨幣 ID</param>
+        /// <returns>刪除結果</returns>
+        [HttpDelete("currencies/{id}")]
+        [DeletedResponseType(typeof(ApiResponse<string>))]
         public async Task<IActionResult> DeleteCurrency(int id)
         {
             try
             {
-                await _currencyService.DeleteAsync(id);
-                return NoContent();
+                var currency = await _currencyService.GetByIdAsync(id);
+                if (currency == null)
+                    return NotFound(new ApiResponse<string>(null, "找不到指定的資料"));
+
+                await _currencyService.DeleteAsync(currency);
+                return Ok(new ApiResponse<string>("刪除成功", "成功"));
             }
             catch (KeyNotFoundException ex)
             {
-                return NotFound(new { message = ex.Message });
+                return NotFound(new ApiResponse<string>(null, ex.Message));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new ApiResponse<string>(null, $"伺服器錯誤: {ex.Message}"));
             }
         }
     }
