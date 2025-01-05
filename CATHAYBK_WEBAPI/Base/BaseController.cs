@@ -1,7 +1,7 @@
 ﻿using BasicEIP_Core.NLog;
 using Microsoft.AspNetCore.Mvc;
 
-namespace TMSERP_Main.Controllers
+namespace CATHAYBK_Main.Controllers
 {
     /// <summary>
     /// 公用Controller類別

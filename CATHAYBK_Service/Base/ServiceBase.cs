@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 
-namespace TMSERP_Service.Base
+namespace CATHAYBK_Service.Base
 {
     public abstract class ServiceBase<TLogger>
     {

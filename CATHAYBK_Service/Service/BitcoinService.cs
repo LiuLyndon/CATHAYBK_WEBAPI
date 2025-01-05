@@ -1,7 +1,7 @@
 using BasicEIP_Core.Repositories;
 using CATHAYBK_Model.Database;
 using Microsoft.Extensions.Logging;
-using TMSERP_Service.Base;
+using CATHAYBK_Service.Base;
 
 namespace CATHAYBK_Service.Service
 {

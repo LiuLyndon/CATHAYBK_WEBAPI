@@ -26,63 +26,71 @@ namespace BasicEIP_Core.Middleware
         // 處理 HTTP 請求的主要方法
         public async Task InvokeAsync(HttpContext context)
         {
-            // 記錄請求訊息
             await LogRequest(context);
 
+            // 使用 MemoryStream 替換原始 Response.Body 以捕獲響應內容
+            var originalBodyStream = context.Response.Body;
+            using (var responseBody = new MemoryStream())
+            {
+                context.Response.Body = responseBody;
 
-            // 使用 Response.OnStarting 來記錄響應
-            //context.Response.OnStarting(async () =>
-            //{
-            //    await LogResponse(context);
-            //});
+                try
+                {
+                    await _next(context); // 執行後續中介軟體
 
-            // 記錄響應訊息
-            await LogResponse(context);
+                    await LogResponse(context); // 記錄響應訊息
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "An exception occurred while processing the request.");
+                    throw;
+                }
+                finally
+                {
+                    // 將 MemoryStream 的內容寫回原始 Response.Body
+                    await responseBody.CopyToAsync(originalBodyStream);
+                    context.Response.Body = originalBodyStream;
+                }
+            }
         }
 
         // 記錄請求訊息
         private async Task LogRequest(HttpContext context)
         {
-            context.Request.EnableBuffering(); // 允許重複讀取 Request.Body
-
             var request = context.Request;
-            var buffer = new byte[Convert.ToInt32(request.ContentLength)];
-            await request.Body.ReadAsync(buffer, 0, buffer.Length);
-            var requestBody = System.Text.Encoding.UTF8.GetString(buffer);
-            request.Body.Position = 0; // 重置 Request.Body 位置
 
-            _logger.LogInformation($"HTTP Request Information: {request.Method} {request.Path} {request.QueryString} Body: {requestBody}");
+            if (request.ContentLength > 0)
+            {
+                // 允許重複讀取 Request.Body
+                context.Request.EnableBuffering();
+
+                // 讀取請求內容
+                var buffer = new byte[Convert.ToInt32(request.ContentLength)];
+                await request.Body.ReadAsync(buffer, 0, buffer.Length);
+                var requestBody = System.Text.Encoding.UTF8.GetString(buffer);
+
+                // 重置 Request.Body 位置
+                context.Request.Body.Position = 0;
+
+                _logger.LogInformation($"HTTP Request Information: Method: {request.Method}, Path: {request.Path}, QueryString: {request.QueryString}, Body: {requestBody}");
+            }
+            else
+            {
+                _logger.LogInformation($"HTTP Request Information: Method: {request.Method}, Path: {request.Path}, QueryString: {request.QueryString}, Body: (empty)");
+            }
         }
 
         // 記錄響應訊息
         private async Task LogResponse(HttpContext context)
         {
-            var originalBodyStream = context.Response.Body;
-            try
-            {
-                using (var responseBody = new MemoryStream())
-                {
-                    context.Response.Body = responseBody;
+            context.Response.Body.Seek(0, SeekOrigin.Begin);
 
-                    // 先讓後續中介軟體處理響應
-                    await _next(context);
+            // 讀取響應內容
+            var responseText = await new StreamReader(context.Response.Body).ReadToEndAsync();
 
-                    // 記錄響應
-                    context.Response.Body.Seek(0, SeekOrigin.Begin);
-                    var responseText = await new StreamReader(context.Response.Body).ReadToEndAsync();
-                    context.Response.Body.Seek(0, SeekOrigin.Begin);
+            context.Response.Body.Seek(0, SeekOrigin.Begin);
 
-                    _logger.LogInformation($"HTTP Response Information: Status Code: {context.Response.StatusCode} Body: {responseText}");
-
-                    // 把內容寫回原始流
-                    await responseBody.CopyToAsync(originalBodyStream);
-                }
-            }
-            finally
-            {
-                //未作此步驟會讓context.Response.Body關閉導致錯誤
-                context.Response.Body = originalBodyStream;
-            }
+            _logger.LogInformation($"HTTP Response Information: Status Code: {context.Response.StatusCode}, Body: {responseText}");
         }
     }
 
