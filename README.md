@@ -1,4 +1,4 @@
-# CATHAYBK 系統專案
+# CATHAYBK 系統專案 (Lyndon)
 此專案包含多個模組與功能，旨在提供高效且易於維護的 WebAPI 架構，並包含測試、規格文件與範本配置。
 
 ## 功能介紹
@@ -32,7 +32,6 @@
 - 提供詳細的資料表結構與關聯設計。
 
 --------------------
-總開發時程約 10小時
 ## 完成項目如下
 
 ### 資料庫 
@@ -69,22 +68,22 @@
 
 ### design pattern 實作 (使用)
 - 1. Repository Pattern (資料存取層)
-- var bitcoins = await _bitcoinService.GetAllAsync();
+var bitcoins = await _bitcoinService.GetAllAsync();
 - 2. Dependency Injection (依賴注入)
-- public BitcoinController(
--    BitcoinService bitcoinService,
--    IAppLogger<BitcoinController> logger) : base(logger)
-- {
--    _bitcoinService = bitcoinService;
-- }
+public BitcoinController(
+    BitcoinService bitcoinService,
+    IAppLogger<BitcoinController> logger) : base(logger)
+{
+   _bitcoinService = bitcoinService;
+}
 - 3. Singleton Pattern (單例模式)
-- builder.Services.AddSingleton<AESService>(...);
+builder.Services.AddSingleton<AESService>(...);
 - 4. Factory Method Pattern (工廠方法模式)
-- var loggerFactory = LoggerFactory.Create(logging =>
-- {
--     logging.ClearProviders();
--     logging.AddNLog();
-- });
+var loggerFactory = LoggerFactory.Create(logging =>
+{
+    logging.ClearProviders();
+    logging.AddNLog();
+});
 
 ### 能夠運行在 Docker (未完成)
 - docker-compose
