@@ -68,22 +68,22 @@
 
 ### design pattern 實作 (使用)
 - 1. Repository Pattern (資料存取層)
-var bitcoins = await _bitcoinService.GetAllAsync();
+- var bitcoins = await _bitcoinService.GetAllAsync();
 - 2. Dependency Injection (依賴注入)
-public BitcoinController(
-    BitcoinService bitcoinService,
-    IAppLogger<BitcoinController> logger) : base(logger)
-{
-   _bitcoinService = bitcoinService;
-}
+- public BitcoinController(
+-     BitcoinService bitcoinService,
+-     IAppLogger<BitcoinController> logger) : base(logger)
+- {
+-     _bitcoinService = bitcoinService;
+- }
 - 3. Singleton Pattern (單例模式)
-builder.Services.AddSingleton<AESService>(...);
+- builder.Services.AddSingleton<AESService>(...);
 - 4. Factory Method Pattern (工廠方法模式)
-var loggerFactory = LoggerFactory.Create(logging =>
-{
-    logging.ClearProviders();
-    logging.AddNLog();
-});
+- var loggerFactory = LoggerFactory.Create(logging =>
+- {
+-      logging.ClearProviders();
+-      logging.AddNLog();
+- });
 
 ### 能夠運行在 Docker (未完成)
 - docker-compose
