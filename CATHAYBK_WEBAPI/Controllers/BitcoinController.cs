@@ -5,7 +5,7 @@ using CATHAYBK_Model.Database;
 using CATHAYBK_Model.WEBAPI.Bitcoin;
 using CATHAYBK_Service.Service;
 using Microsoft.AspNetCore.Mvc;
-using TMSERP_Main.Controllers;
+using CATHAYBK_Main.Controllers;
 
 namespace CATHAYBK_WEBAPI.Controllers
 {

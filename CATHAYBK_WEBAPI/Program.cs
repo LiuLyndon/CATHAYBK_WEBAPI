@@ -18,6 +18,20 @@ using Microsoft.Extensions.Logging;
 
 var logger = NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
 
+// 啟動應用程序，檢查控制台輸出是否有 NLog initialized successfully. 的訊息。如果出現錯誤，可能是 nlog.config 路徑不正確或文件內容配置有問題。
+/*try
+{
+    logger.Info("NLog initialized successfully.");
+}
+catch (Exception ex)
+{
+    Console.WriteLine($"NLog initialization failed: {ex.Message}");
+}
+finally
+{
+    LogManager.Shutdown();
+}*/
+
 try
 {
     logger.Debug("Application starting...");
@@ -226,9 +240,9 @@ void ConfigureMiddleware(WebApplication app)
 
     // 設定中介層與路由
     app.UseRouting();
-    // 設定路由
-    app.MapControllers(); // 將 Controller 類別映射為路由
+    // 將 Controller 類別映射為路由
+    app.MapControllers(); 
 
-    // 
+    // 其他中介軟體
     app.UseMiddleware<SqlLoggingMiddleware>();
 }
