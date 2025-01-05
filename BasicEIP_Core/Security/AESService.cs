@@ -2,6 +2,9 @@ using System.Security.Cryptography;
 
 namespace BasicEIP_Core.Security
 {
+    /// <summary>
+    /// https://www.devglan.com/online-tools/aes-encryption-decryption
+    /// </summary>
     public class AESService
     {
         private readonly string _key;

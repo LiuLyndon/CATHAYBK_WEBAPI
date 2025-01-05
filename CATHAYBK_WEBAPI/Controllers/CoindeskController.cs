@@ -29,7 +29,7 @@ namespace CATHAYBK_WEBAPI.Base
         /// 從 Coindesk API 抓取並儲存 Bitcoin 資料
         /// </summary>
         /// <returns>操作結果</returns>
-        [HttpGet("fetch-and-save")]
+        [HttpGet("FetchAndSave")]
         [DefaultResponseType(typeof(ApiResponse<string>))]
         public async Task<IActionResult> FetchAndSaveBitcoinData()
         {
